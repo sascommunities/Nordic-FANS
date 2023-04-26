@@ -1,0 +1,143 @@
+/****************************/
+/* SAS FANS 2022-11-10      */
+/*                          */
+/* Sas Viya och Proc Fedsql */
+/* Anders Nilsson           */
+/* Wasa kredit              */
+/****************************/
+
+/*Starta CAS-session som heter Anders*/
+cas Anders;
+
+/*Lista alla Caslib som finns*/
+caslib _all_ list;
+
+/*Skapa SAS-library som pekar på CAS-library, så att vi ser datat i Sas Studio*/
+libname MinCas cas caslib='casuser';
+
+/*Skapa tabell i Casuser via Proc Sql som körs i Compute-servern*/
+proc sql;
+  create table MinCas.MinKlass as
+  select *
+  from sashelp.class;
+quit;
+
+/*Skapa tabell i Casuser via Proc Fedsql som körs i CAS*/
+proc fedsql sessref=Anders;
+  create table casuser.TestTabell as
+  select 'Hello World' as Message;
+quit;
+
+/*Vi kan ha låååånga tabellnamn och variabelnamn i CAS*/
+proc fedsql sessref=Anders;
+  create table casuser.AbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghijAbcdefghij    as
+  select 'Hello World' as Message;
+quit;
+
+/*Man kan ändra vilket Caslib som är aktivt*/
+cas Anders sessopts=(caslib='public');
+/*Vi ändrar tillbaka*/
+cas Anders sessopts=(caslib='casuser');
+
+/*En tabell utan library skapas i det aktiva libraryt*/
+proc fedsql sessref=Anders;
+  create table VarHamnarJag as
+  select 'Hello world' as Message;
+quit;
+
+/*En tabell blir temporär som default. Om man vill att den ska vara permanent måste man göra promote.*/
+proc casutil;
+  promote casdata='VarHamnarJag' incaslib='casuser';
+quit;
+
+/*Det vanliga skrivsättet för datumkonstanter fungerar EJ*/
+proc fedsql sessref=Anders;
+  select *
+  from Personer
+  where Fdatum>='1jan2000'd; /*Fungerar EJ*/
+quit;
+
+/*Standard Sql-skrivsätt för datum*/
+proc fedsql sessref=Anders;
+  select *
+  from Personer
+  where Fdatum>=Date'2000-01-01'; /*Fungerar*/
+quit;
+
+/*Dubbelfnuttar används för variabelnamn, ej för textsträngar*/
+%let mvar=2000-01-01;
+proc fedsql sessref=Anders;
+  select *
+  from Personer
+  where Fdatum>=Date"&mvar";  /*Funkar EJ*/
+quit;
+
+/*%tslit sätter enkelfnuttar kring ett värde*/
+%let mvar=2000-01-01;
+proc fedsql sessref=Anders;
+  select *
+  from Personer
+  where Fdatum>=Date%tslit(&mvar); /*Fungerar*/
+quit;
+
+/*Man måste tänka på datatyperna i Fedsql*/
+%let mvar=%sysfunc(mdy(1,1,2000));
+%put NOTE: &=mvar;
+proc fedsql sessref=Anders;
+  select *
+  from Personer
+  where Fdatum>=&mvar;  /*Funkar EJ*/
+quit;
+
+/*Cast-funktionen kan göra om mellan datatyper*/
+%let mvar=%sysfunc(mdy(1,1,2000));
+%put NOTE: &=mvar;
+proc fedsql sessref=Anders;
+  select *
+  from Personer
+  where Fdatum>=cast(&mvar as date); /*Funkar*/
+quit;
+
+/*Alternativ till Cast är :: operatorn*/
+%let mvar=%sysfunc(mdy(1,1,2000));
+%put NOTE: &=mvar;
+proc fedsql sessref=Anders;
+  select *
+  from Personer
+  where Fdatum>=&mvar::date; /*Funkar*/
+quit;
+
+/*Många SAS-funktioner tillåts ej i Fedsql*/
+proc fedsql sessref=Anders;
+  select Fnamn, Enamn, 
+         catx(' ',Fnamn,Enamn) as SammansattNamn  /*Funkar EJ*/
+  from Personer
+  where Fdatum>=&mvar::date;
+quit;
+
+/*Använd || istället för catx*/
+proc fedsql sessref=Anders;
+  select Fnamn, Enamn, 
+         compbl(Fnamn || Enamn) as SammansattNamn /*Funkar*/
+  from Personer
+  where Fdatum>=&mvar::date;
+quit;
+
+/*CAS-action kan användas för att köra Fedsql-kod*/
+proc cas;
+   fedsql.execdirect query="select * from SistaExempel";
+quit;
+
+/*Tänk på fnuttarna, dubbelfnuttar för variabelnamn och enkelfnuttar för textsträng*/
+proc cas;
+   fedsql.execdirect query='select * from SistaExempel 
+                            where "Aktivitet att göra"=''Avslutning'' ';
+quit;
+
+
+
+
+
+
+
+
