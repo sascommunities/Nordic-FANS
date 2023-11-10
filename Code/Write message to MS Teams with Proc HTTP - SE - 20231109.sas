@@ -1,12 +1,12 @@
 
-/* Webhook url frÂn n‰r vi l‰gger till Incoming Webhook i Teams-kanalen */
-%let TeamsURL=https://office365.webhook.office.com/j‰ttelÂng-konstig-l‰nke/87488dabc08052dd05b4d6/8c043e00-aa44-43bd-a3ff-ea76477c8b6e;
+/* Webhook url fr√•n n√§r vi l√§gger till Incoming Webhook i Teams-kanalen */
+%let TeamsURL=https://office365.webhook.office.com/j√§ttel√•ng-konstig-l√§nke/87488dabc08052dd05b4d6/8c043e00-aa44-43bd-a3ff-ea76477c8b6e;
 
 /* En enkel rad med text */
 filename resp temp;
 options noquotelenmax;
 proc http
-  /* H‰r petar vi in webhook URL */
+  /* H√§r petar vi in webhook URL */
   url="&TeamsURL"
   method="POST"
   ct="text/plain"
@@ -15,8 +15,8 @@ proc http
       "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
       "type": "AdaptiveCard",
       "version": "1.0",
-      "summary": "Kort meddelande frÂn SAS",
-      "text": "Det h‰r skickades mha PROC HTTP."
+      "summary": "Kort meddelande fr√•n SAS",
+      "text": "Det h√§r skickades mha PROC HTTP."
   }'
   out=resp;
 run;
@@ -26,7 +26,7 @@ run;
 filename resp temp;
 options noquotelenmax;
 proc http
-  /* H‰r petar vi in webhook URL */
+  /* H√§r petar vi in webhook URL */
   url="&TeamsURL"
   method="POST"
   ct="text/plain"
@@ -34,9 +34,9 @@ proc http
   '{
 	"@type": "MessageCard",
 	"@context": "https://schema.org/extensions",
-	"summary": "Fˆrslag pÂ lÂt till Rock pÂ slottet",
+	"summary": "F√∂rslag p√• l√•t till Rock p√• slottet",
 	"themeColor": "0078D7",
-	"title": "Fˆrslag pÂ lÂt att spela",
+	"title": "F√∂rslag p√• l√•t att spela",
 	"sections": [
 		{
 			"activityTitle": "",
@@ -44,7 +44,7 @@ proc http
 			"activityImage": "https://stuff.fendergarage.com/images/G/6/Q/taxonomy-electric-guitar-stratocaster-american-professional-car@2x.png",
 			"facts": [
 				{
-					"name": "LÂt:",
+					"name": "L√•t:",
 					"value": "You Shook Me All Night Long"
 				},
 				{
@@ -69,7 +69,7 @@ proc http
 	"potentialAction": [
 			{
 			"@type": "OpenUri",
-			"name": "÷ppna Spotify",
+			"name": "√ñppna Spotify",
 			"targets": [
 				{
 					"os": "default",
@@ -79,7 +79,7 @@ proc http
 		},
 		{
 			"@type": "OpenUri",
-			"name": "÷ppna Youtube",
+			"name": "√ñppna Youtube",
 			"targets": [
 				{
 					"os": "default",
