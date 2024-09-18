@@ -98,18 +98,6 @@ PROC SQL _method;
 QUIT;
 
 
-PROC SQL;
-   CREATE TABLE WORK.expensive AS 
-   SELECT t1.Make, 
-          t1.Model, 
-          t1.MSRP 
-      FROM SASHELP.CARS t1
-      WHERE t1.MSRP >= (
-         SELECT /* AVG_of_MSRP */
-           (AVG(t1.MSRP)) AS AVG_of_MSRP
-             FROM SASHELP.CARS t1
-      );
-QUIT;
 
 /* 
 *****  ****    ***   *   *  
@@ -192,21 +180,3 @@ QUIT;
 
 
 
-
-
-
-
-
-/*data WORK.Bilhandlare;*/
-/*length Make Bilhandlare $ 15;*/
-/*Make = 'Audi';Bilhandlare = 'Audi Sverige';OUTPUT;*/
-/*Make = 'BMW';Bilhandlare = 'Bavaria';OUTPUT;*/
-/*Make = 'Jaguar';Bilhandlare = 'Hedin Bil';OUTPUT;*/
-/*Make = 'Land Rover';Bilhandlare = 'Landrover';OUTPUT;*/
-/*Make = 'MINI';Bilhandlare = 'Bilia';OUTPUT;*/
-/*Make = 'Mercedes-Benz';Bilhandlare = 'Mercedes-Benz';OUTPUT;*/
-/*Make = 'Porsche';Bilhandlare = 'Porsche Sverige';OUTPUT;*/
-/*Make = 'Saab';Bilhandlare = 'N/A';OUTPUT;*/
-/*Make = 'Volkswagen';Bilhandlare = 'Aftén Bil';OUTPUT;*/
-/*Make = 'Volvo';Bilhandlare = 'VolvoCars';OUTPUT;*/
-/*run;*/
