@@ -1,4 +1,4 @@
-  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Let's set some macro vars to help us save the report in HOME.   */
 
 %let homepath=%sysget(HOME);
