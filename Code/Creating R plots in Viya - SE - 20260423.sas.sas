@@ -1,7 +1,7 @@
-/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+  /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 /* Let's set some macro vars to help us save the report in HOME.   */
 
-%let homepath=%str(/srv/nfs/kubedata/compute-landingzone/DanielR);
+%let homepath=%sysget(HOME);
 %put &=homepath;
 %let now=%sysfunc(compress(%sysfunc(translate(%sysfunc(time(),time5.),.,:))));
 %put &=now ;
